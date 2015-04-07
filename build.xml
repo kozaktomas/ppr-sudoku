@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SudokuResolver" default="run">
+        <property name="name" value="xkozak" />
+
+ <!-- [COMPILE] -->
+	<path id="test.classpath">
+		<pathelement location="lib/junit-4.10.jar"/>
+		<pathelement location="bin" />
+	</path>
+	<path id="music.classpath">
+		<pathelement location="lib/jl1.0.1.jar"/>
+	</path>
+
+        <target name="compile" >
+		<mkdir dir="bin" />
+                <javac srcdir="src" destdir="bin" includeantruntime="false">
+			<classpath refid="music.classpath" />
+		</javac>
+		<javac srcdir="test" destdir="bin" includeantruntime="false">
+			<classpath refid="test.classpath" />
+		</javac>
+        </target>
+  <!-- [/COMPILE] -->	
+ <!-- [JAR] -->
+	<target name="jar" depends="compile">
+                <jar jarfile="${name}.jar" >
+			<fileset dir="bin"/>
+		</jar>
+        </target>
+ <!-- [/JAR] -->	
+ <!-- [RUN]-->
+	<target name="run" depends="jar">
+		<java classpath="${name}.jar" classname="cz.mendelu.xkozak.pjj.project.sudoku.Sudoku" fork="yes">
+			<classpath refid="music.classpath" />
+		</java>
+	</target>
+<!-- [/RUN]-->
+<!-- [DOC] -->
+	<target name="javadoc" depends="compile" >		
+		<mkdir dir="doc"/>
+		<javadoc destdir="doc">
+			<fileset dir="src" defaultexcludes="yes">
+				<include name="**/*.java"/>
+				<!--<exclude name="org/test/**/*.java" />-->
+			</fileset>
+		</javadoc>
+	</target>
+<!-- [DOC] -->	
+ <!-- [CLEAN] -->
+        <target name="clean" >
+                <delete dir="bin"/>
+                <delete dir="javadoc"/>
+		<delete file="${name}.jar" />
+        </target>
+ <!-- [/CLEAN] -->	
+ <!-- [TESTY] -->
+	<target name="test" depends="compile">
+		<junit printsummary="false" haltonfailure="true">
+			<classpath refid="test.classpath"/>
+			<formatter type="brief" usefile="false"/>
+			<test name="cz.mendelu.xkozak.pjj.project.sudoku.test.ResolverTest"/>
+		</junit>
+	</target>	
+<!-- [/TESTY] -->	
+</project>
