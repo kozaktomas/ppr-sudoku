@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Gui for SudokuResolver
@@ -41,6 +43,46 @@ public class Sudoku extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
+
+        cz.mendelu.xkozak.pjj.project.sudoku.resolver.Resolver r = new cz.mendelu.xkozak.pjj.project.sudoku.resolver.Resolver();
+        r.setNumber(0, 1, 8);
+        r.setNumber(0, 7, 6);
+        r.setNumber(1, 0, 9);
+        r.setNumber(1, 8, 8);
+        r.setNumber(2, 4, 3);
+        r.setNumber(2, 5, 4);
+        r.setNumber(2, 6, 9);
+        r.setNumber(3, 0, 3);
+        r.setNumber(3, 1, 6);
+        r.setNumber(3, 2, 9);
+        r.setNumber(3, 4, 8);
+        r.setNumber(3, 7, 5);
+        r.setNumber(3, 8, 4);
+        r.setNumber(4, 0, 2);
+        r.setNumber(4, 2, 8);
+        r.setNumber(4, 3, 7);
+        r.setNumber(5, 0, 1);
+        r.setNumber(5, 1, 4);
+        r.setNumber(5, 2, 7);
+        r.setNumber(5, 4, 6);
+        r.setNumber(5, 7, 8);
+        r.setNumber(5, 8, 2);
+        r.setNumber(6, 4, 2);
+        r.setNumber(6, 5, 1);
+        r.setNumber(6, 6, 5);
+        r.setNumber(7, 0, 6);
+        r.setNumber(7, 8, 1);
+        r.setNumber(8, 1, 3);
+        r.setNumber(8, 7, 4);
+        r.solve();
+
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                System.out.print(r.getNumber(x, y) + " ");
+            }
+            System.out.println("");
+        }
+
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
