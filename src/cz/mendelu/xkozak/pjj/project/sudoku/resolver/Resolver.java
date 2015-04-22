@@ -1,6 +1,9 @@
 package cz.mendelu.xkozak.pjj.project.sudoku.resolver;
 
 import cz.mendelu.xkozak.pjj.project.sudoku.IResolver;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -10,8 +13,10 @@ public class Resolver implements IResolver {
 
     Structure structure = new Structure();
 
-    public Resolver() {
+    LastChecker checker;
 
+    public Resolver() {
+        this.checker = new LastChecker(this.structure);
     }
 
     @Override
@@ -44,14 +49,31 @@ public class Resolver implements IResolver {
     @Override
     public void solve() {
         int cores = Runtime.getRuntime().availableProcessors();
+        Vector threads = new Vector();
 
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < 1000; i++) {
             for (int x = 0; x < 9; x++) {
                 for (int y = 0; y < 9; y++) {
-                    ResolverThread t = new ResolverThread(this.structure, x, y);
-                    t.run();
+                    if (!this.structure.isFinished(x, y)) {
+                        ResolverThread t = new ResolverThread(this.structure, x, y);
+                        t.run();
+                        threads.addElement(t);
+                        //System.out.println("start");
+                    }
                 }
             }
+
+            for (Object x : threads) {
+                try {
+                    ResolverThread th = (ResolverThread) x;
+                    th.join();
+                    //System.out.println("stop");
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Resolver.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            threads.clear();
+            //this.checker.check();
         }
     }
 

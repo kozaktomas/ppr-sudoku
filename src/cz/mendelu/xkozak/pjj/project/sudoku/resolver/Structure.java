@@ -1,6 +1,8 @@
 package cz.mendelu.xkozak.pjj.project.sudoku.resolver;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -24,6 +26,12 @@ public class Structure {
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public synchronized Set<Integer> getSet(int x, int y) {
         return this.matrix[x][y];
     }
@@ -39,15 +47,23 @@ public class Structure {
     }
 
     public synchronized void setNumber(int x, int y, Integer nubmer) {
+        System.out.println("P");
         this.finish[x][y] = true;
         for (Integer i = 1; i < 10; i++) {
-            if (this.matrix[x][y].contains(i) && !i.equals(nubmer)) {
-                this.matrix[x][y].remove(i);
+            
+            Iterator iterator = this.matrix[x][y].iterator();
+            while (iterator.hasNext()) {
+                Integer value = (int) iterator.next();
+                if (!Objects.equals(nubmer, value)) {
+                    iterator.remove();
+                }
             }
+        
         }
+        System.out.println("K");
     }
 
-    public Boolean isFinished(int x, int y) {
+    public synchronized Boolean isFinished(int x, int y) {
         return this.finish[x][y];
     }
 
@@ -61,5 +77,9 @@ public class Structure {
             }
         }
         return b;
+    }
+
+    public synchronized boolean contain(int x, int y, int num) {
+        return this.matrix[x][y].contains(num);
     }
 }

@@ -1,5 +1,6 @@
 package cz.mendelu.xkozak.pjj.project.sudoku.resolver;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -24,9 +25,9 @@ public class ResolverThread extends Thread {
 
     @Override
     public void run() {
+        this.doSquare();
         this.doRow();
         this.doColumn();
-        this.doSquare();
         this.checkLast();
     }
 
@@ -62,9 +63,10 @@ public class ResolverThread extends Thread {
                 if (mx != this.x && my != this.y) {
                     Integer num = this.structure.getNumber(mx, my);
                     if (num > 0) {
-                        structure.setNumber(this.x, this.y, num);
+                        this.set.remove(num);
                     }
                 }
+                //System.out.println("["+this.x+";"+this.y+"] - " + "["+cx+";"+cy+"] - " + "["+mx+";"+my+"]");
             }
         }
     }
@@ -72,7 +74,38 @@ public class ResolverThread extends Thread {
     private void checkLast() {
         Integer num = this.structure.getNumber(this.x, this.y);
         if (num > 0) {
+            //System.out.println("SET NUMBER " + num + " to ["+this.x+";"+this.y+"]");
             structure.setNumber(this.x, this.y, num);
+        }
+        
+        boolean found;
+        for(Object x: this.set.toArray()){
+            Integer currentNumber = (Integer)x;
+            
+            // columns
+            found = false;
+            for(Integer i = 0; i < 9; i++){
+                if(this.structure.contain(this.x, i, currentNumber) && !i.equals(this.y)){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                this.structure.setNumber(this.x, this.y, currentNumber);
+            }
+            
+            // rows
+            found = false;
+            for(Integer i = 0; i < 9; i++){
+                if(this.structure.contain(i, this.y, currentNumber) && !i.equals(this.x)){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                this.structure.setNumber(this.x, this.y, currentNumber);
+            }
+            
         }
     }
 
