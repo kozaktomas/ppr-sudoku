@@ -1,6 +1,5 @@
 package cz.mendelu.xkozak.pjj.project.sudoku.resolver;
 
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -25,25 +24,25 @@ public class ResolverThread extends Thread {
 
     @Override
     public void run() {
-        this.doSquare();
         this.doRow();
         this.doColumn();
+        this.doSquare();
         this.checkLast();
     }
 
     private void doRow() {
-        for (Integer i = 0; i < 9; i++) {
-            Integer num = this.structure.getNumber(i, this.y);
-            if (num > 0) {
+        for (int i = 0; i < 9; i++) {
+            int num = this.structure.getNumber(this.x, i);
+            if (num > 0 && this.y != i) {
                 this.set.remove(num);
             }
         }
     }
 
     private void doColumn() {
-        for (Integer i = 0; i < 9; i++) {
-            Integer num = this.structure.getNumber(this.x, i);
-            if (num > 0) {
+        for (int i = 0; i < 9; i++) {
+            int num = this.structure.getNumber(i, this.y);
+            if (num > 0 && this.x != i) {
                 this.set.remove(num);
             }
         }
@@ -66,46 +65,64 @@ public class ResolverThread extends Thread {
                         this.set.remove(num);
                     }
                 }
-                //System.out.println("["+this.x+";"+this.y+"] - " + "["+cx+";"+cy+"] - " + "["+mx+";"+my+"]");
             }
         }
     }
 
-    private void checkLast() {
+    private synchronized void checkLast() {
         Integer num = this.structure.getNumber(this.x, this.y);
         if (num > 0) {
-            //System.out.println("SET NUMBER " + num + " to ["+this.x+";"+this.y+"]");
             structure.setNumber(this.x, this.y, num);
         }
-        
+
         boolean found;
-        for(Object x: this.set.toArray()){
-            Integer currentNumber = (Integer)x;
-            
-            // columns
+        for (Object x : this.set.toArray()) {
+            int currentNumber = (Integer) x;
+
+            // row
             found = false;
-            for(Integer i = 0; i < 9; i++){
-                if(this.structure.contain(this.x, i, currentNumber) && !i.equals(this.y)){
+            for (int i = 0; i < 9; i++) {
+                if (this.structure.contains(this.x, i, currentNumber) && i != this.y) {
                     found = true;
                     break;
                 }
             }
-            if(!found){
+            if (!found) {
                 this.structure.setNumber(this.x, this.y, currentNumber);
             }
-            
-            // rows
+
+            // column
             found = false;
-            for(Integer i = 0; i < 9; i++){
-                if(this.structure.contain(i, this.y, currentNumber) && !i.equals(this.x)){
+            for (int i = 0; i < 9; i++) {
+                if (this.structure.contains(i, this.y, currentNumber) && i != this.x) {
                     found = true;
                     break;
                 }
             }
-            if(!found){
+            if (!found) {
                 this.structure.setNumber(this.x, this.y, currentNumber);
             }
-            
+
+            // square
+            found = false;
+            int cx = 3 * ((this.x / 3) + 1) - 2; // center x
+            int cy = 3 * ((this.y / 3) + 1) - 2; // center y
+            int mx;
+            int my;
+            for (int i = -1; i < 2; i++) {
+                for (int j = -1; j < 2; j++) {
+                    mx = cx + i;
+                    my = cy + j;
+                    if (this.structure.contains(mx, my, currentNumber)) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                this.structure.setNumber(this.x, this.y, currentNumber);
+            }
         }
     }
 

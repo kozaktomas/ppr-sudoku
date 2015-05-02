@@ -1,8 +1,6 @@
 package cz.mendelu.xkozak.pjj.project.sudoku.resolver;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -13,6 +11,8 @@ public class Structure {
     private HashSet[][] matrix = new HashSet[9][9];
 
     private Boolean[][] finish = new Boolean[9][9];
+
+    private int finish_count = 0;
 
     public Structure() {
         for (int i = 0; i < 9; i++) {
@@ -47,20 +47,12 @@ public class Structure {
     }
 
     public synchronized void setNumber(int x, int y, Integer nubmer) {
-        System.out.println("P");
-        this.finish[x][y] = true;
-        for (Integer i = 1; i < 10; i++) {
-            
-            Iterator iterator = this.matrix[x][y].iterator();
-            while (iterator.hasNext()) {
-                Integer value = (int) iterator.next();
-                if (!Objects.equals(nubmer, value)) {
-                    iterator.remove();
-                }
-            }
-        
+        if (this.finish[x][y] == false) {
+            this.finish[x][y] = true;
+            this.matrix[x][y].clear();
+            this.matrix[x][y].add(nubmer);
+            this.finish_count++;
         }
-        System.out.println("K");
     }
 
     public synchronized Boolean isFinished(int x, int y) {
@@ -79,7 +71,11 @@ public class Structure {
         return b;
     }
 
-    public synchronized boolean contain(int x, int y, int num) {
+    public synchronized boolean contains(int x, int y, int num) {
         return this.matrix[x][y].contains(num);
+    }
+    
+    public boolean isDone(){
+        return (this.finish_count == 81);
     }
 }

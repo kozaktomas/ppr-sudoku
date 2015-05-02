@@ -282,6 +282,7 @@ public final class Resolver implements IResolver{
     
     
     public void solve(){
+        long start_time = System.nanoTime();
         int it = 0;
         while(!isComplete() && it < 100){
             for (int i = 0; i <= 8; i++){
@@ -299,6 +300,9 @@ public final class Resolver implements IResolver{
             } 
             it++;
         }
+        long end_time = System.nanoTime();
+        double difference = (end_time - start_time)/1e6;
+        System.err.println(difference);
     }    
     /**
      * @return Solved sudoku in matrix of integers

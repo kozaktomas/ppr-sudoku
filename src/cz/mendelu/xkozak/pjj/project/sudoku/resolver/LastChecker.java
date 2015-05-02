@@ -25,7 +25,7 @@ public class LastChecker {
                 int last_x = 0;
                 int last_y = 0;
                 for (int y = 0; y < 9; y++) {
-                    if (structure.contain(x, y, num)) {
+                    if (structure.contains(x, y, num)) {
                         found++;
                         last_x = x;
                         last_y = y;
@@ -48,7 +48,7 @@ public class LastChecker {
                 int last_x = 0;
                 int last_y = 0;
                 for (int x = 0; x < 9; x++) {
-                    if (structure.contain(x, y, num)) {
+                    if (structure.contains(x, y, num)) {
                         found++;
                         last_x = x;
                         last_y = y;
@@ -76,7 +76,7 @@ public class LastChecker {
                         for (int j = -1; j < 2; j++) {
                             int mx = cx + i;
                             int my = cy + j;
-                            if (structure.contain(mx, my, num)) {
+                            if (structure.contains(mx, my, num)) {
                                 found++;
                                 last_x = mx;
                                 last_y = my;

@@ -43,22 +43,25 @@ public class Resolver implements IResolver {
 
     @Override
     public boolean isFinishable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public void solve() {
-        int cores = Runtime.getRuntime().availableProcessors();
+        long start_time = System.nanoTime();
+        
         Vector threads = new Vector();
-
-        for (int i = 0; i < 1000; i++) {
+        boolean resolver = true;
+        int iterator = 0;
+        
+        while (resolver && iterator < 500) {
+            iterator++;
             for (int x = 0; x < 9; x++) {
                 for (int y = 0; y < 9; y++) {
                     if (!this.structure.isFinished(x, y)) {
                         ResolverThread t = new ResolverThread(this.structure, x, y);
                         t.run();
                         threads.addElement(t);
-                        //System.out.println("start");
                     }
                 }
             }
@@ -67,14 +70,18 @@ public class Resolver implements IResolver {
                 try {
                     ResolverThread th = (ResolverThread) x;
                     th.join();
-                    //System.out.println("stop");
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Resolver.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             threads.clear();
-            //this.checker.check();
+            
+            resolver = !this.structure.isDone();
         }
+        System.out.println("COUNT OF ITERATIONS: " + iterator);
+        long end_time = System.nanoTime();
+        double difference = (end_time - start_time)/1e6;
+        System.err.println("THREADS: " + difference); 
     }
 
     @Override
