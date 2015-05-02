@@ -46,7 +46,6 @@ public class Resolver implements IResolver {
 
     @Override
     public void solve() {
-        long start_time = System.nanoTime();
         
         Vector threads = new Vector();
         boolean resolver = true;
@@ -76,10 +75,8 @@ public class Resolver implements IResolver {
             
             resolver = !this.structure.isDone();
         }
-        System.out.println("COUNT OF ITERATIONS: " + iterator);
-        long end_time = System.nanoTime();
-        double difference = (end_time - start_time)/1e6;
-        System.err.println("THREADS: " + difference); 
+        //System.out.println("COUNT OF ITERATIONS: " + iterator);
+        
     }
 
     @Override
