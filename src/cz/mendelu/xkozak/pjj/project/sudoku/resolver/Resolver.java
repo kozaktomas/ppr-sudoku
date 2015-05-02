@@ -13,10 +13,8 @@ public class Resolver implements IResolver {
 
     Structure structure = new Structure();
 
-    LastChecker checker;
 
     public Resolver() {
-        this.checker = new LastChecker(this.structure);
     }
 
     @Override

@@ -69,7 +69,7 @@ public class ResolverThread extends Thread {
         }
     }
 
-    private synchronized void checkLast() {
+    private void checkLast() {
         Integer num = this.structure.getNumber(this.x, this.y);
         if (num > 0) {
             structure.setNumber(this.x, this.y, num);
