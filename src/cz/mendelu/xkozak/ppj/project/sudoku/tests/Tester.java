@@ -9,7 +9,7 @@ import cz.mendelu.xkozak.pjj.project.sudoku.IResolver;
 public class Tester {
 
     public static void main(String[] args) {
-        int count = 100000;
+        int count = 1000;
 
         // THREADS
         long start_time = System.nanoTime();
